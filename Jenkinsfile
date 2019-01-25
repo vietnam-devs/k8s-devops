@@ -9,16 +9,18 @@ volumes: [
   hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
   hostPathVolume(mountPath: '/home/jenkins/.nuget/packages', hostPath: '/home/.nuget/packages/')
 ]){
-    def myRepo = checkout scm
-    def gitCommit = myRepo.GIT_COMMIT
-    def gitBranch = myRepo.GIT_BRANCH
-    def shortGitCommit = "v-${gitCommit[0..6]}"
+    node(label) {
+        def myRepo = checkout scm
+        def gitCommit = myRepo.GIT_COMMIT
+        def gitBranch = myRepo.GIT_BRANCH
+        def shortGitCommit = "v-${gitCommit[0..6]}"
 
-    stage('Build') {
-        container('netcore22') {
-            sh """
-                dotnet restore
-            """
+        stage('Build') {
+            container('netcore22') {
+                sh """
+                    dotnet restore
+                """
+            }
         }
-    }
+    }    
 }
