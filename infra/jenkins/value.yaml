@@ -1,0 +1,28 @@
+# helm install --name jenkins stable/jenkins --namespace=infra -f jenkins\value.yaml
+
+Master:  
+  ServiceType: NodePort
+  NodePort: 30000
+
+Persistence:
+  ExistingClaim: nfs-jenkins-data-claim
+  volumes:
+    - name: tz-config
+      hostPath:
+        path: /etc/localtime
+  mounts:
+    - name: tz-config
+      mountPath: /etc/timezone
+
+## Install Default RBAC roles and bindings
+rbac:
+  install: true
+  serviceAccount: jenkins
+  # RBAC api version (currently either v1beta1 or v1alpha1)
+  apiVersion: v1beta1
+  # Cluster role reference
+  roleRef: cluster-admin
+
+JavaOpts:
+  -Dhudson.slaves.NodeProvisioner.MARGIN=50 
+  -Dhudson.slaves.NodeProvisioner.MARGIN0=0.85
