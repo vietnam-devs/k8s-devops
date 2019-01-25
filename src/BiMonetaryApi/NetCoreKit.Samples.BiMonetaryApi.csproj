@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AspNetCoreHostingModel>inprocess</AspNetCoreHostingModel>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="NetCoreKit.Domain" Version="0.1.121" />
+    <PackageReference Include="NetCoreKit.Infrastructure" Version="0.1.121" />
+    <PackageReference Include="NetCoreKit.Infrastructure.AspNetCore" Version="0.1.121" />
+    <PackageReference Include="NetCoreKit.Infrastructure.AspNetCore.OpenApi" Version="0.1.121" />
+    <PackageReference Include="NetCoreKit.Infrastructure.Bus" Version="0.1.121" />
+    <PackageReference Include="NetCoreKit.Infrastructure.Mongo" Version="0.1.121" />
+    <PackageReference Include="NetCoreKit.Template.gRPC.Standard" Version="0.1.121" />
+    <PackageReference Include="NetCoreKit.Template.Rest.MongoDb" Version="0.1.121" />
+    <PackageReference Include="NetCoreKit.Utils" Version="0.1.121" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="v1\Grpc\" />
+  </ItemGroup>
+
+</Project>

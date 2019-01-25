@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28407.52
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetCoreKit.Samples.ExchangeService", "src\ExchangeService\NetCoreKit.Samples.ExchangeService.csproj", "{133CEDB5-52F7-4E0F-98E8-E6B42A26656A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetCoreKit.Samples.BiMonetaryApi", "src\BiMonetaryApi\NetCoreKit.Samples.BiMonetaryApi.csproj", "{A97C5622-878E-4590-99E3-A8BF1C7DDD9E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{133CEDB5-52F7-4E0F-98E8-E6B42A26656A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{133CEDB5-52F7-4E0F-98E8-E6B42A26656A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{133CEDB5-52F7-4E0F-98E8-E6B42A26656A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{133CEDB5-52F7-4E0F-98E8-E6B42A26656A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A97C5622-878E-4590-99E3-A8BF1C7DDD9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A97C5622-878E-4590-99E3-A8BF1C7DDD9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A97C5622-878E-4590-99E3-A8BF1C7DDD9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A97C5622-878E-4590-99E3-A8BF1C7DDD9E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EDF42128-62E1-4E43-BA8F-CFCF4CC0C38D}
+	EndGlobalSection
+EndGlobal

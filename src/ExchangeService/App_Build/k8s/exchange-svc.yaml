@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: exchange
+  labels:
+    app: exchange
+spec:
+  ports:
+  - name: grpc
+    port: 5000
+    targetPort: 5000
+  type: ClusterIP
+  selector:
+    app: exchange
