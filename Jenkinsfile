@@ -10,6 +10,10 @@ volumes: [
   hostPathVolume(mountPath: '/home/jenkins/.nuget/packages', hostPath: '/home/.nuget/packages/')
 ]){
     node(label) {
+        parameters {
+            string(name: 'BUILD_DOCKER_IMAGE', defaultValue: 'false', description: 'Do you want to build docker image?')                    
+        }
+
         def myRepo = checkout scm
         def gitCommit = myRepo.GIT_COMMIT
         def gitBranch = myRepo.GIT_BRANCH
@@ -21,6 +25,23 @@ volumes: [
                     dotnet restore
                     dotnet build k8s-devops.sln --no-restore -nowarn:msb3202,nu1503
                 """
+            }
+        }
+
+        stage('Run unittest') {
+            githubNotify description: 'This is a shorted example',  status: 'SUCCESS'
+            println "Comming soon!"
+        }
+
+        if(params.BUILD_DOCKER_IMAGE == 'true' ) {
+            stage('Buid docker image') {
+                container('docker') {
+                    sh """
+                        docker --version
+                        echo $shortGitCommit
+                        echo $REGISTRY_URL
+                    """
+                }
             }
         }
     }    
