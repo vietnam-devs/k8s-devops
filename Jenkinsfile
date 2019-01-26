@@ -24,10 +24,10 @@ volumes: [
                     """
                 }
             }
-            githubNotify description: 'This is a shorted example',  status: 'SUCCESS'
+            githubNotify description: 'This is a shorted example',  status: 'SUCCESS', credentialsId: 'github', repo: 'k8s-devops'
         }
         catch(e) {
-            githubNotify description: 'This is a shorted example',  status: 'FAILURE'
+            githubNotify description: 'This is a shorted example',  status: 'FAILURE', credentialsId: 'github', repo: 'k8s-devops'
             throw e
         }        
     }    
