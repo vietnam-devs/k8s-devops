@@ -18,7 +18,7 @@ namespace NetCoreKit.Samples.ExchangeService
         {
             var host = new HostBuilder()
                 .ConfigureDefaultSettings(args, svc => { svc.AddHostedService<HostedService>(); });
-            await host.RunAsync();
+            await host1.RunAsync();
         }
     }
 
