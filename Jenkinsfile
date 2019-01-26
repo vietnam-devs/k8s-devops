@@ -19,6 +19,7 @@ volumes: [
             container('netcore22') {
                 sh """
                     dotnet restore
+                    dotnet build k8s-devops.sln --no-restore -nowarn:msb3202,nu1503
                 """
             }
         }
