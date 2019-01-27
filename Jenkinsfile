@@ -1,9 +1,9 @@
 def label = "worker-${UUID.randomUUID().toString()}"
 
 podTemplate(label: label, serviceAccount: 'jenkins', containers: [
-  containerTemplate(name: 'netcore22', image: 'microsoft/dotnet:2.2.100-sdk-alpine', ttyEnabled: true, resourceRequestCpu: '200m', resourceLimitCpu: '200m', resourceRequestMemory: '400Mi', resourceLimitMemory: '400Mi'),
-  containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true, resourceRequestCpu: '200m', resourceLimitCpu: '200m', resourceRequestMemory: '400Mi', resourceLimitMemory: '400Mi'),  
-  containerTemplate(name: 'helm', image: 'lachlanevenson/k8s-helm:latest', command: 'cat', ttyEnabled: true, privileged: false, resourceRequestCpu: '100m', resourceLimitCpu: '100m', resourceRequestMemory: '200Mi', resourceLimitMemory: '200Mi')  
+  containerTemplate(name: 'netcore22', image: 'microsoft/dotnet:2.2.100-sdk-alpine', ttyEnabled: true),
+  containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),  
+  containerTemplate(name: 'helm', image: 'lachlanevenson/k8s-helm:latest', command: 'cat', ttyEnabled: true, privileged: false)  
 ],
 volumes: [
   hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
@@ -52,6 +52,15 @@ volumes: [
                         docker push $REGISTRY_URL/exchange-service:latest
                     """
                 }                    
+            }
+        }
+
+        stage('Deploy') {
+            container('helm') {
+                sh """
+                    k set image deployments bimonetary-api-v1 *=192.168.1.4:8082/bimonetary-api:$shortGitCommit -n dev
+                    k set image deployments exchange *=192.168.1.4:8082/exchange-service:$shortGitCommit -n dev
+                """                
             }
         }
     }    
