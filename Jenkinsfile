@@ -35,12 +35,17 @@ volumes: [
 
             stage('Buid docker image') {
                 container('docker') {
-                    sh """
-                        docker --version
-                        echo $shortGitCommit
-                        echo $REGISTRY_URL
-                        docker build -t $REGISTRY_URL/BiMonetaryApi:latest -t $REGISTRY_URL/BiMonetaryApi:$shortGitCommit ./BiMonetaryApi
-                    """
+                    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'nexus_key',
+                        usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+                        sh """
+                            docker --version
+                            echo $shortGitCommit
+                            echo $REGISTRY_URL
+
+                            docker login -u $USERNAME -p $PASSWORD $ACR_REGISTRY_URL
+                            docker build -f src/BiMonetaryApi/Dockerfile -t $REGISTRY_URL/bimonetary-api:$shortGitCommit -t $REGISTRY_URL/bimonetary-api:latest .
+                        """
+                    }                    
                 }
             }
 
