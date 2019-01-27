@@ -19,30 +19,37 @@ volumes: [
         def gitBranch = myRepo.GIT_BRANCH
         def shortGitCommit = "v-${gitCommit[0..6]}"
 
-        stage('Build') {
-            container('netcore22') {
-                sh """
-                    dotnet restore
-                    dotnet build k8s-devops.sln --no-restore -nowarn:msb3202,nu1503
-                """
-            }
-        }
-
-        stage('Run unittest') {
-            githubNotify description: 'This is a shorted example',  status: 'SUCCESS'
-            println "Comming soon!"
-        }
-
-        if(params.BUILD_DOCKER_IMAGE == 'true' ) {
-            stage('Buid docker image') {
-                container('docker') {
+        try{
+            stage('Build') {
+                container('netcore22') {
                     sh """
-                        docker --version
-                        echo $shortGitCommit
-                        echo $REGISTRY_URL
+                        dotnet restore
+                        dotnet build k8s-devops.sln --no-restore -nowarn:msb3202,nu1503
                     """
                 }
             }
+
+            stage('Run unittest') {             
+                println "Comming soon!"
+            }
+
+            if(params.BUILD_DOCKER_IMAGE == 'true' ) {
+                stage('Buid docker image') {
+                    container('docker') {
+                        sh """
+                            docker --version
+                            echo $shortGitCommit
+                            echo $REGISTRY_URL
+                        """
+                    }
+                }
+            }
+
+            githubNotify description: 'This build is good',  status: 'SUCCESS'
+        }
+        catch(e) {
+            githubNotify description: 'Err: Incremental Build failed with Error: ' + e.toString(),  status: 'FAILURE'
+            throw e
         }
     }    
 }
