@@ -49,10 +49,10 @@ volumes: [
                 }
             }
 
-            githubNotify description: 'This build is good',  status: 'SUCCESS'            
+            //githubNotify description: 'This build is good',  status: 'SUCCESS'            
         }
         catch(e) {
-            githubNotify description: 'Err: Incremental Build failed with Error: ' + e.toString(),  status: 'FAILURE'
+            //githubNotify description: 'Err: Incremental Build failed with Error: ' + e.toString(),  status: 'FAILURE'
             throw e
         }
     }    
