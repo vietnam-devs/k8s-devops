@@ -20,34 +20,31 @@ volumes: [
         def shortGitCommit = "v-${gitCommit[0..6]}"
 
         try{
-            githubNotify description: 'This build is good',  status: 'SUCCESS'
-            
-            stage('Build') {
-                container('netcore22') {
+            // stage('Build') {
+            //     container('netcore22') {
+            //         sh """
+            //             dotnet restore
+            //             dotnet build k8s-devops.sln --no-restore -nowarn:msb3202,nu1503
+            //         """
+            //     }
+            // }
+
+            // stage('Run unittest') {             
+            //     println "Comming soon!"
+            // }
+
+            stage('Buid docker image') {
+                container('docker') {
                     sh """
-                        dotnet restore
-                        dotnet build k8s-devops.sln --no-restore -nowarn:msb3202,nu1503
+                        docker --version
+                        echo $shortGitCommit
+                        echo $REGISTRY_URL
+                        docker build -t $REGISTRY_URL/BiMonetaryApi:latest -t $REGISTRY_URL/BiMonetaryApi:$shortGitCommit ./BiMonetaryApi
                     """
                 }
             }
 
-            stage('Run unittest') {             
-                println "Comming soon!"
-            }
-
-            if(params.BUILD_DOCKER_IMAGE == 'true' ) {
-                stage('Buid docker image') {
-                    container('docker') {
-                        sh """
-                            docker --version
-                            echo $shortGitCommit
-                            echo $REGISTRY_URL
-                        """
-                    }
-                }
-            }
-
-            
+            githubNotify description: 'This build is good',  status: 'SUCCESS'            
         }
         catch(e) {
             githubNotify description: 'Err: Incremental Build failed with Error: ' + e.toString(),  status: 'FAILURE'
