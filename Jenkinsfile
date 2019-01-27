@@ -19,41 +19,40 @@ volumes: [
         def gitBranch = myRepo.GIT_BRANCH
         def shortGitCommit = "v-${gitCommit[0..6]}"
 
-        try{
-            // stage('Build') {
-            //     container('netcore22') {
-            //         sh """
-            //             dotnet restore
-            //             dotnet build k8s-devops.sln --no-restore -nowarn:msb3202,nu1503
-            //         """
-            //     }
-            // }
+    // stage('Build') {
+        //     container('netcore22') {
+        //         sh """
+        //             dotnet restore
+        //             dotnet build k8s-devops.sln --no-restore -nowarn:msb3202,nu1503
+        //         """
+        //     }
+        // }
 
-            // stage('Run unittest') {             
-            //     println "Comming soon!"
-            // }
+        // stage('Run unittest') {             
+        //     println "Comming soon!"
+        // }
 
-            stage('Buid docker image') {
-                container('docker') {
-                    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'nexus_key',
-                        usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-                        sh """
-                            docker --version
-                            echo $shortGitCommit
-                            echo $REGISTRY_URL
+        stage('Buid docker image') {
+            container('docker') {
+                withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'nexus_key',
+                    usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+                    sh """
+                        docker --version
+                        echo $shortGitCommit
+                        echo $REGISTRY_URL
+                        
+                        docker login -u $USERNAME -p $PASSWORD $REGISTRY_URL
 
-                            docker login -u $USERNAME -p $PASSWORD $REGISTRY_URL
-                            docker build -f src/BiMonetaryApi/Dockerfile -t $REGISTRY_URL/bimonetary-api:$shortGitCommit -t $REGISTRY_URL/bimonetary-api:latest .
-                        """
-                    }                    
-                }
+                        docker build -f src/BiMonetaryApi/Dockerfile -t $REGISTRY_URL/bimonetary-api:$shortGitCommit -t $REGISTRY_URL/bimonetary-api:latest .                            
+                        docker push $REGISTRY_URL/bimonetary-api:$shortGitCommit
+                        docker push $REGISTRY_URL/bimonetary-api:latest
+
+                        docker build -f src/ExchangeService/Dockerfile -t $REGISTRY_URL/exchange-service:$shortGitCommit -t $REGISTRY_URL/exchange-service:latest .                            
+                        docker push $REGISTRY_URL/exchange-service:$shortGitCommit
+                        docker push $REGISTRY_URL/exchange-service:latest
+                    """
+                }                    
             }
-
-            //githubNotify description: 'This build is good',  status: 'SUCCESS'            
-        }
-        catch(e) {
-            //githubNotify description: 'Err: Incremental Build failed with Error: ' + e.toString(),  status: 'FAILURE'
-            throw e
         }
     }    
 }
