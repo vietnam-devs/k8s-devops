@@ -11,7 +11,8 @@ volumes: [
 ]){
     node(label) {
         parameters {
-            string(name: 'BUILD_DOCKER_IMAGE', defaultValue: 'false', description: 'Do you want to build docker image?')                    
+            string(name: 'DEPLOY_TO_ENV', defaultValue: 'false', description: 'Do you want to deploy?')
+            string(name: 'ENV', defaultValue: 'false', description: 'Which environment?')                    
         }
 
         def myRepo = checkout scm
@@ -19,49 +20,51 @@ volumes: [
         def gitBranch = myRepo.GIT_BRANCH
         def shortGitCommit = "v-${gitCommit[0..6]}"
 
-    // stage('Build') {
-        //     container('netcore22') {
-        //         sh """
-        //             dotnet restore
-        //             dotnet build k8s-devops.sln --no-restore -nowarn:msb3202,nu1503
-        //         """
-        //     }
-        // }
-
-        // stage('Run unittest') {             
-        //     println "Comming soon!"
-        // }
-
-        stage('Buid docker image') {
-            container('docker') {
-                withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'nexus_key',
-                    usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-                    sh """
-                        docker --version
-                        echo $shortGitCommit
-                        echo $REGISTRY_URL
-                        
-                        docker login -u $USERNAME -p $PASSWORD $REGISTRY_URL
-
-                        docker build -f src/BiMonetaryApi/Dockerfile -t $REGISTRY_URL/bimonetary-api:$shortGitCommit -t $REGISTRY_URL/bimonetary-api:latest .                            
-                        docker push $REGISTRY_URL/bimonetary-api:$shortGitCommit
-                        docker push $REGISTRY_URL/bimonetary-api:latest
-
-                        docker build -f src/ExchangeService/Dockerfile -t $REGISTRY_URL/exchange-service:$shortGitCommit -t $REGISTRY_URL/exchange-service:latest .                            
-                        docker push $REGISTRY_URL/exchange-service:$shortGitCommit
-                        docker push $REGISTRY_URL/exchange-service:latest
-                    """
-                }                    
-            }
-        }
-
-        stage('Deploy') {
-            container('kubectl') {
+        stage('Build') {
+            container('netcore22') {
                 sh """
-                    kubectl set image deployments bimonetary-api-v1 *=192.168.1.4:8082/bimonetary-api:$shortGitCommit -n dev
-                    kubectl set image deployments exchange *=192.168.1.4:8082/exchange-service:$shortGitCommit -n dev
-                """                
+                    dotnet restore
+                    dotnet build k8s-devops.sln --no-restore -nowarn:msb3202,nu1503
+                """
             }
         }
+
+        stage('Run unittest') {             
+            println "Comming soon!"
+        }
+
+        if(params.DEPLOY_TO_ENV == 'true') {
+            stage('Buid docker image') {
+                container('docker') {
+                    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'nexus_key',
+                        usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+                        sh """
+                            docker --version
+                            echo $shortGitCommit
+                            echo $REGISTRY_URL
+                            
+                            docker login -u $USERNAME -p $PASSWORD $REGISTRY_URL
+
+                            docker build -f src/BiMonetaryApi/Dockerfile -t $REGISTRY_URL/bimonetary-api:$shortGitCommit -t $REGISTRY_URL/bimonetary-api:latest .                            
+                            docker push $REGISTRY_URL/bimonetary-api:$shortGitCommit
+                            docker push $REGISTRY_URL/bimonetary-api:latest
+
+                            docker build -f src/ExchangeService/Dockerfile -t $REGISTRY_URL/exchange-service:$shortGitCommit -t $REGISTRY_URL/exchange-service:latest .                            
+                            docker push $REGISTRY_URL/exchange-service:$shortGitCommit
+                            docker push $REGISTRY_URL/exchange-service:latest
+                        """
+                    }                    
+                }
+            }
+
+            stage('Deploy') {
+                container('kubectl') {
+                    sh """
+                        kubectl set image deployments bimonetary-api-v1 *=192.168.1.4:8082/bimonetary-api:$shortGitCommit -n params.ENV
+                        kubectl set image deployments exchange *=192.168.1.4:8082/exchange-service:$shortGitCommit -n params.ENV
+                    """                
+                }
+            }
+        }        
     }    
 }
