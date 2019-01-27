@@ -20,6 +20,8 @@ volumes: [
         def shortGitCommit = "v-${gitCommit[0..6]}"
 
         try{
+            githubNotify description: 'This build is good',  status: 'SUCCESS'
+            
             stage('Build') {
                 container('netcore22') {
                     sh """
@@ -45,7 +47,7 @@ volumes: [
                 }
             }
 
-            githubNotify description: 'This build is good',  status: 'SUCCESS'
+            
         }
         catch(e) {
             githubNotify description: 'Err: Incremental Build failed with Error: ' + e.toString(),  status: 'FAILURE'
