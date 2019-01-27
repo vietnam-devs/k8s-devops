@@ -60,8 +60,8 @@ volumes: [
             stage('Deploy') {
                 container('kubectl') {
                     sh """
-                        kubectl set image deployments bimonetary-api-v1 *=192.168.1.4:8082/bimonetary-api:$shortGitCommit -n params.ENV
-                        kubectl set image deployments exchange *=192.168.1.4:8082/exchange-service:$shortGitCommit -n params.ENV
+                        kubectl set image deployments bimonetary-api-v1 *=192.168.1.4:8082/bimonetary-api:$shortGitCommit -n $params.ENV
+                        kubectl set image deployments exchange *=192.168.1.4:8082/exchange-service:$shortGitCommit -n $params.ENV
                     """                
                 }
             }
