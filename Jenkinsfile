@@ -42,7 +42,7 @@ volumes: [
                             echo $shortGitCommit
                             echo $REGISTRY_URL
 
-                            docker login -u $USERNAME -p $PASSWORD $ACR_REGISTRY_URL
+                            docker login -u $USERNAME -p $PASSWORD $REGISTRY_URL
                             docker build -f src/BiMonetaryApi/Dockerfile -t $REGISTRY_URL/bimonetary-api:$shortGitCommit -t $REGISTRY_URL/bimonetary-api:latest .
                         """
                     }                    
