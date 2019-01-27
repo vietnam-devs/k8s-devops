@@ -58,8 +58,8 @@ volumes: [
         stage('Deploy') {
             container('helm') {
                 sh """
-                    k set image deployments bimonetary-api-v1 *=192.168.1.4:8082/bimonetary-api:$shortGitCommit -n dev
-                    k set image deployments exchange *=192.168.1.4:8082/exchange-service:$shortGitCommit -n dev
+                    kubectl set image deployments bimonetary-api-v1 *=192.168.1.4:8082/bimonetary-api:$shortGitCommit -n dev
+                    kubectl set image deployments exchange *=192.168.1.4:8082/exchange-service:$shortGitCommit -n dev
                 """                
             }
         }
