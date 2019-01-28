@@ -95,12 +95,11 @@ namespace NetCoreKit.Samples.BiMonetaryApi
 
                 if (feature.IsEnabled("ResponseCompression"))
                     services.AddResponseCompression();
-            }
 
-            // var config = resolver.GetService<IConfiguration>();
-            // var channel = new Channel(config["RpcClients:ExchangeService"], ChannelCredentials.Insecure);
-            // var client = new MyExchangeService.ExchangeServiceClient(channel);
-            // services.AddSingleton(typeof(MyExchangeService.ExchangeServiceClient), client);
+                var channel = new Channel(config["RpcClients:ExchangeService"], ChannelCredentials.Insecure);
+                var client = new MyExchangeService.ExchangeServiceClient(channel);
+                services.AddSingleton(typeof(MyExchangeService.ExchangeServiceClient), client);
+            }
         }
 
         public void Configure(IApplicationBuilder app)
