@@ -13,10 +13,10 @@ namespace NetCoreKit.Samples.BiMonetaryApi
         {
             services.AddMongoDbTemplate(null, (svc, resolver) =>
             {
-                var config = resolver.GetService<IConfiguration>();
-                var channel = new Channel(config["RpcClients:ExchangeService"], ChannelCredentials.Insecure);
-                var client = new MyExchangeService.ExchangeServiceClient(channel);
-                services.AddSingleton(typeof(MyExchangeService.ExchangeServiceClient), client);
+                // var config = resolver.GetService<IConfiguration>();
+                // var channel = new Channel(config["RpcClients:ExchangeService"], ChannelCredentials.Insecure);
+                // var client = new MyExchangeService.ExchangeServiceClient(channel);
+                // services.AddSingleton(typeof(MyExchangeService.ExchangeServiceClient), client);
             });
         }
 

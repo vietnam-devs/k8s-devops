@@ -9,18 +9,18 @@ namespace NetCoreKit.Samples.BiMonetaryApi.v1.Controllers
     [ApiController]
     public class PingController : ControllerBase
     {
-        private readonly MyExchangeService.ExchangeServiceClient _exchangeServiceClient;
+        // private readonly MyExchangeService.ExchangeServiceClient _exchangeServiceClient;
 
-        public PingController(MyExchangeService.ExchangeServiceClient exchangeServiceClient)
-        {
-            _exchangeServiceClient = exchangeServiceClient;
-        }
+        // public PingController(MyExchangeService.ExchangeServiceClient exchangeServiceClient)
+        // {
+        //     _exchangeServiceClient = exchangeServiceClient;
+        // }
 
         [HttpGet]
         public async Task<IActionResult> Ping()
         {
-            var response = await _exchangeServiceClient.PingAsync(new Empty());
-            return Ok(response.Result);
+            //var response = await _exchangeServiceClient.PingAsync(new Empty());
+            return Ok();
         }
     }
 }
