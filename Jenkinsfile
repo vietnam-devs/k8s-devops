@@ -19,6 +19,5 @@ volumes: [
         def gitCommit = myRepo.GIT_COMMIT
         def gitBranch = myRepo.GIT_BRANCH
         def shortGitCommit = "v-${gitCommit[0..6]}"
-               
     }    
 }
