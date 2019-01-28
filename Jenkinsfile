@@ -14,14 +14,5 @@ volumes: [
         def gitCommit = myRepo.GIT_COMMIT
         def gitBranch = myRepo.GIT_BRANCH
         def shortGitCommit = "v-${gitCommit[0..6]}"
-
-        stage('Build') {
-            container('netcore22') {
-                sh """
-                    dotnet restore
-                    dotnet build k8s-devops.sln --no-restore -nowarn:msb3202,nu1503
-                """
-            }
-        }
     }    
 }
