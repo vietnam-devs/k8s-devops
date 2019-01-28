@@ -32,5 +32,37 @@ volumes: [
         stage('Run unittest') {             
             println "Comming soon!"
         }
+
+        stage('Buid docker image') {
+                container('docker') {
+                    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'nexus_key',
+                        usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+                        sh """
+                            docker --version
+                            echo $shortGitCommit
+                            echo $REGISTRY_URL
+                            
+                            docker login -u $USERNAME -p $PASSWORD $REGISTRY_URL
+
+                            docker build -f src/BiMonetaryApi/Dockerfile -t $REGISTRY_URL/bimonetary-api:$shortGitCommit -t $REGISTRY_URL/bimonetary-api:latest .                            
+                            docker push $REGISTRY_URL/bimonetary-api:$shortGitCommit
+                            docker push $REGISTRY_URL/bimonetary-api:latest
+
+                            docker build -f src/ExchangeService/Dockerfile -t $REGISTRY_URL/exchange-service:$shortGitCommit -t $REGISTRY_URL/exchange-service:latest .                            
+                            docker push $REGISTRY_URL/exchange-service:$shortGitCommit
+                            docker push $REGISTRY_URL/exchange-service:latest
+                        """
+                    }                    
+                }
+            }
+
+        stage('Deploy') {
+            container('kubectl') {
+                sh """
+                    kubectl set image deployments bimonetary-api-v1 *=192.168.1.4:8082/bimonetary-api:$shortGitCommit -n $params.ENV
+                    kubectl set image deployments exchange *=192.168.1.4:8082/exchange-service:$shortGitCommit -n $params.ENV
+                """                
+            }
+        }
     }    
 }
