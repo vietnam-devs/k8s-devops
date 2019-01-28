@@ -1,0 +1,5 @@
+k create namespaces dev
+
+k apply -f infra/mongo -n dev
+k apply -f src\BiMonetaryApi\App_Build\k8s\ -n dev
+k apply -f src\ExchangeService\App_Build\k8s\ -n dev
