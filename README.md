@@ -2,5 +2,3 @@
 The demo repository for modern DevOps event 
 
 
-
-ddd
