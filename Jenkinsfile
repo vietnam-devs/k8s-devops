@@ -20,13 +20,13 @@ node {
 
         docker.image('docker:18.09').inside {
             stage('Build Docker Image') {
-                sh '''
+                sh """
                     docker --version
 
                     docker build -f src/BiMonetaryApi/Dockerfile -t bimonetary-api:${gitShortCommit} . 
 
                     docker images
-                '''
+                """
             }
         }
     }
