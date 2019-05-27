@@ -11,6 +11,22 @@ node {
                     dotnet build k8s-devops.sln --no-restore -nowarn:msb3202,nu1503
                 '''
             }
+
+            stage('Run unittest') {
+                println('Unit test!!!')
+            }
+        }
+
+        docker.image('docker:18.09').inside {
+            stage('Build Docker Image') {
+                sh '''
+                    docker images
+
+                    docker build -f src/BiMonetaryApi/Dockerfile -t bimonetary-api:$shortGitCommit . 
+
+                    docker images
+                '''
+            }
         }
     }
     catch(e) {
