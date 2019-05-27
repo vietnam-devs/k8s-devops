@@ -7,6 +7,7 @@ node {
         docker.image('mcr.microsoft.com/dotnet/core/sdk:2.2.300-alpine').inside {
             stage('Build') {
                 sh '''
+                    echo ${gitShortCommit}
                     dotnet restore
                     dotnet build k8s-devops.sln --no-restore -nowarn:msb3202,nu1503
                 '''
@@ -22,7 +23,7 @@ node {
                 sh '''
                     docker --version
 
-                    docker build -f src/BiMonetaryApi/Dockerfile -t bimonetary-api:$gitShortCommit . 
+                    docker build -f src/BiMonetaryApi/Dockerfile -t bimonetary-api:${gitShortCommit} . 
 
                     docker images
                 '''
