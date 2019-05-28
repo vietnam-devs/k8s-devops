@@ -19,7 +19,7 @@ node {
         // }
 
         stage('Build Docker Image') {
-            docker.withRegistry($REGISTRY_URL, 'nexus_docker_registry_login') {
+            docker.withRegistry("${env.REGISTRY_URL}", 'nexus_docker_registry_login') {
                 def bimonetaryImage = docker.build("bimonetary-api:${gitShortCommit}", "src/BiMonetaryApi")
 
                 bimonetaryImage.push()
