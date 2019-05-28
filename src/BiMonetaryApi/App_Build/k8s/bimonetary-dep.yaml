@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
       - name: bimonetary-api
-        image: 192.168.1.4:8082/bimonetary-api:latest
+        image: 52.175.72.125:18082/repository/docker-host/bimonetary-api:latest
         imagePullPolicy: IfNotPresent
         env:
         - name: Hosts__BasePath
