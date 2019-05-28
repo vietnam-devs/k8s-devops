@@ -38,7 +38,7 @@ node {
         // }
 
         stage('Deploy') {
-            docker.image('bitnami/kubectl:1.12.8').inside('-v ~/.kube:/config/.kube') {
+            docker.image('bitnami/kubectl:1.12.8').inside("-v /home/jacky/.kube:/config/.kube") {
                 sh """
                        kubectl version
 
