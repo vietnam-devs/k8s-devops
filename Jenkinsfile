@@ -19,11 +19,20 @@ node {
         // }
 
         stage('Build Docker Image') {
-            docker.withRegistry("${env.REGISTRY_URL}", 'nexus_docker_registry_login') {
-                def bimonetaryImage = docker.build("bimonetary-api:${gitShortCommit}", "-f src/BiMonetaryApi/Dockerfile .")
+            docker.image('docker:18.09').inside {
+                docker.withRegistry("${env.REGISTRY_URL}", 'nexus_docker_registry_login') {
+                    // def bimonetaryImage = docker.build("bimonetary-api:${gitShortCommit}", "-f src/BiMonetaryApi/Dockerfile .")
 
-                bimonetaryImage.push()
-            }            
+                    // bimonetaryImage.push()
+                    sh """
+                        docker --version
+
+                        docker build -f src/BiMonetaryApi/Dockerfile -t $REGISTRY_URL/bimonetary-api:latest -t bimonetary-api:${gitShortCommit} .                    
+
+                        docker push $REGISTRY_URL/bimonetary-api:latest
+                    """
+                }
+            }                        
             // sh """
             //     docker --version
 
