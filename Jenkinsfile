@@ -38,11 +38,12 @@ node {
         // }
 
         stage('Deploy') {
-            docker.image('bitnami/kubectl:1.12.8').inside("-v /home/jacky/.kube:/config/.kube") {
+            docker.image('alpine/kubectl:1.12.8').inside("-v /home/jacky/.kube:/config/.kube") {
                 sh """
-                       kubectl version
+                    ls /config/.kube
+                       kubectl version --kubeconfig /config/.kube/config
 
-                       kubectl get nodes
+                       kubectl get nodes --kubeconfig /config/.kube/config
                     """
             }                                   
         }
