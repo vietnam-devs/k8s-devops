@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetCoreKit.Samples.Exchange
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetCoreKit.Samples.BiMonetaryApi", "src\BiMonetaryApi\NetCoreKit.Samples.BiMonetaryApi.csproj", "{A97C5622-878E-4590-99E3-A8BF1C7DDD9E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetCoreKit.Samples.Tests", "src\NetCoreKit.Samples.Tests\NetCoreKit.Samples.Tests.csproj", "{BCD2C2DB-BB43-45D1-8243-F4110068F4C1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{A97C5622-878E-4590-99E3-A8BF1C7DDD9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A97C5622-878E-4590-99E3-A8BF1C7DDD9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A97C5622-878E-4590-99E3-A8BF1C7DDD9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCD2C2DB-BB43-45D1-8243-F4110068F4C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCD2C2DB-BB43-45D1-8243-F4110068F4C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCD2C2DB-BB43-45D1-8243-F4110068F4C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCD2C2DB-BB43-45D1-8243-F4110068F4C1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
