@@ -20,18 +20,30 @@ node {
 
         stage('Build Docker Image') {
             docker.image('docker:18.09').inside {
-                docker.withRegistry("${env.REGISTRY_URL}", 'nexus_docker_registry_login') {
-                    // def bimonetaryImage = docker.build("bimonetary-api:${gitShortCommit}", "-f src/BiMonetaryApi/Dockerfile .")
+                withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'nexus_docker_registry_login', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
 
-                    // bimonetaryImage.push()
                     sh """
-                        docker --version
+                        docker login -u $USERNAME -p $PASSWORD $REGISTRY_URL
 
                         docker build -f src/BiMonetaryApi/Dockerfile -t $REGISTRY_URL/bimonetary-api:latest -t bimonetary-api:${gitShortCommit} .                    
 
                         docker push $REGISTRY_URL/bimonetary-api:latest
                     """
+                    
                 }
+
+                // docker.withRegistry("${env.REGISTRY_URL}", 'nexus_docker_registry_login') {
+                //     // def bimonetaryImage = docker.build("bimonetary-api:${gitShortCommit}", "-f src/BiMonetaryApi/Dockerfile .")
+
+                //     // bimonetaryImage.push()
+                //     sh """
+                //         docker --version
+
+                //         docker build -f src/BiMonetaryApi/Dockerfile -t $REGISTRY_URL/bimonetary-api:latest -t bimonetary-api:${gitShortCommit} .                    
+
+                //         docker push $REGISTRY_URL/bimonetary-api:latest
+                //     """
+                // }
             }                        
             // sh """
             //     docker --version
