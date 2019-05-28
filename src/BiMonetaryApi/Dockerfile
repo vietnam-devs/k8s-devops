@@ -1,5 +1,5 @@
-FROM mcr.microsoft.com/dotnet/core/runtime:2.2 AS base
-# RUN apk update && apk add libc6-compat
+FROM microsoft/dotnet:2.2.0-aspnetcore-runtime-alpine AS base
+RUN apk update && apk add libc6-compat
 WORKDIR /app
 
 ARG service_version
@@ -11,7 +11,7 @@ ENV API_VERSION ${api_version:-1.0}
 ENV ASPNETCORE_URLS http://+:80
 EXPOSE 80
 
-FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS build
+FROM microsoft/dotnet:2.2.100-sdk-alpine AS build
 WORKDIR .
 COPY . .
 

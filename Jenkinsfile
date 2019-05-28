@@ -4,7 +4,7 @@ node {
     def gitShortCommit = scmVars.GIT_COMMIT[0..6]
 
     try {
-        // docker.image('mcr.microsoft.com/dotnet/core/sdk:2.2.300-alpine').inside {
+        // docker.image('microsoft/dotnet:2.2.100-sdk-alpine').inside {
         //     stage('Build') {
         //         sh '''
         //             echo ${gitShortCommit}
@@ -25,7 +25,7 @@ node {
                     sh """
                         docker login -u $USERNAME -p $PASSWORD $REGISTRY_URL
 
-                        docker build -f src/BiMonetaryApi/Dockerfile -t $REGISTRY_URL/bimonetary-api:latest -t bimonetary-api:${gitShortCommit} .                    
+                        docker build -f src/BiMonetaryApi/Dockerfile -t $REGISTRY_URL/bimonetary-api:latest -t $REGISTRY_URL/bimonetary-api:${gitShortCommit} .                    
 
                         docker push $REGISTRY_URL/bimonetary-api:latest
                         docker push $REGISTRY_URL/bimonetary-api:${gitShortCommit}
