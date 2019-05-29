@@ -8,9 +8,7 @@ node {
 
     stage('Create namespace') {
         docker.image('alpine/kubectl:1.12.8').inside("-v /home/jacky/.kube:/config/.kube") {
-            sh """          
-                ls ../
-
+            sh """                          
                 kubectl version --kubeconfig ${kubeConfig}
                 kubectl get nodes --kubeconfig ${kubeConfig}
 
@@ -20,6 +18,7 @@ node {
                 kubectl apply -f ./infra/mongo -n ${params.NS_NAME} --kubeconfig ${kubeConfig}
 
                 kubectl apply -f ./src/BiMonetaryApi/App_Build/k8s/ -n ${params.NS_NAME} --kubeconfig ${kubeConfig}
+                kubectl apply -f .src/ExchangeService/App_Build/k8s/ -n ${params.NS_NAME} --kubeconfig ${kubeConfig}
             """
         }
     }  
