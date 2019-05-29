@@ -8,7 +8,9 @@ node {
 
     stage('Create namespace') {
         docker.image('alpine/kubectl:1.12.8').inside("-v /home/jacky/.kube:/config/.kube") {
-            sh """                
+            sh """          
+                ls ${WORKSPACE}
+                
                 kubectl version --kubeconfig ${kubeConfig}
                 kubectl get nodes --kubeconfig ${kubeConfig}
 
