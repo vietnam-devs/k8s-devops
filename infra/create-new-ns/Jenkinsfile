@@ -1,0 +1,24 @@
+node {
+
+    parameters {
+        string(name: 'NS_NAME', defaultValue: '', description: 'Please input the namespace name.')
+    }
+
+    def kubeConfig = "/config/.kube/config"
+
+    stage('Create namespace') {
+        docker.image('alpine/kubectl:1.12.8').inside("-v /home/jacky/.kube:/config/.kube") {
+            sh """                
+                kubectl version --kubeconfig ${kubeConfig}
+                kubectl get nodes --kubeconfig ${kubeConfig}
+
+                kubectl create ns ${params.NS_NAME} --kubeconfig ${kubeConfig}
+                kubectl label namespace ${params.NS_NAME} istio-injection=enabled --kubeconfig ${kubeConfig}
+
+                kubectl apply -f ../mongo -n ${params.NS_NAME} --kubeconfig ${kubeConfig}
+
+                kubectl apply -f ${$WORKSPACE}/src/BiMonetaryApi/App_Build/k8s/ -n ${params.NS_NAME} --kubeconfig ${kubeConfig}
+            """
+        }
+    }  
+}

@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: exchange
-        image: 192.168.1.4:8082/exchange-service:latest
+        image: 52.175.72.125:18082/repository/docker-host/exchange-service:latest
         imagePullPolicy: IfNotPresent
         env:
         - name: Hosts__Local__Host
@@ -25,13 +25,13 @@ spec:
           value: "5000"
         ports:
         - containerPort: 5000
-        # resources:
-        #   requests:
-        #     cpu: 200m
-        #     memory: 64Mi
-        #   limits:
-        #     cpu: 300m
-        #     memory: 128Mi
+        resources:
+          requests:
+            cpu: 200m
+            memory: 64Mi
+          limits:
+            cpu: 200m
+            memory: 512Mi
         readinessProbe:
           initialDelaySeconds: 15
           exec:

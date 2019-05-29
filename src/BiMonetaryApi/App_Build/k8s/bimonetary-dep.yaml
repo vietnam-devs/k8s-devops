@@ -21,13 +21,13 @@ spec:
           value: mongodb://mongodb:27017
         - name: RpcClients__ExchangeService
           value: exchange:5000
-        # resources:
-        #   requests:
-        #     cpu: 200m
-        #     memory: 64Mi
-        #   limits:
-        #     cpu: 300m
-        #     memory: 128Mi
+        resources:
+          requests:
+            cpu: 200m
+            memory: 64Mi
+          limits:
+            cpu: 200m
+            memory: 512Mi
         ports:
         - containerPort: 80
         livenessProbe:
