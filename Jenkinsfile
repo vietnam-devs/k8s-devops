@@ -56,8 +56,8 @@ node {
                     sh """                        
                         kubectl version --kubeconfig /config/.kube/config
 
-                        kubectl set image deployments bimonetary-api-v1 52.175.72.125:18082/repository/docker-host/bimonetary-api:${gitShortCommit} -n ${params.ENV}
-                        kubectl set image deployments exchange 52.175.72.125:18082/repository/docker-host/exchange-service:${gitShortCommit} -n ${params.ENV}
+                        kubectl set image deployments bimonetary-api-v1 *=52.175.72.125:18082/repository/docker-host/bimonetary-api:${gitShortCommit} -n ${params.ENV}
+                        kubectl set image deployments exchange *=52.175.72.125:18082/repository/docker-host/exchange-service:${gitShortCommit} -n ${params.ENV}
 
                         """
                 }                                   
