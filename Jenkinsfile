@@ -2,7 +2,8 @@ node {
 
     parameters {
         string(name: 'WILL_BUILD_IMAGE', defaultValue: 'false', description: 'Do you want to build docker image?')
-        string(name: 'WILL_DEPLOY', defaultValue: 'false')        
+        string(name: 'WILL_DEPLOY', defaultValue: 'false')
+        string(name: 'ENV', defaultValue: 'dev', description: 'Which environment?')
     }
 
     def scmVars = checkout scm
@@ -52,11 +53,12 @@ node {
         if ( params.WILL_DEPLOY == 'true' ) {
             stage('Deploy') {
                 docker.image('alpine/kubectl:1.12.8').inside("-v /home/jacky/.kube:/config/.kube") {
-                    sh """
-                        ls /config/.kube
+                    sh """                        
                         kubectl version --kubeconfig /config/.kube/config
 
-                        kubectl get nodes --kubeconfig /config/.kube/config
+                        kubectl set image deployments 52.175.72.125:18082/repository/docker-host/bimonetary-api:$shortGitCommit -n $params.ENV
+                        kubectl set image deployments 52.175.72.125:18082/repository/docker-host/exchange-service:$shortGitCommit -n $params.ENV
+
                         """
                 }                                   
             }
