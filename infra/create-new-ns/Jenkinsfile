@@ -17,7 +17,7 @@ node {
 
                 kubectl apply -f ../mongo -n ${params.NS_NAME} --kubeconfig ${kubeConfig}
 
-                kubectl apply -f ${$WORKSPACE}/src/BiMonetaryApi/App_Build/k8s/ -n ${params.NS_NAME} --kubeconfig ${kubeConfig}
+                kubectl apply -f  ${JENKINS_HOME}/workspace/src/BiMonetaryApi/App_Build/k8s/ -n ${params.NS_NAME} --kubeconfig ${kubeConfig}
             """
         }
     }  
