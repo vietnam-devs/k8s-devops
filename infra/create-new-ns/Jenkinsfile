@@ -15,7 +15,7 @@ node {
                 kubectl create ns ${params.NS_NAME} --kubeconfig ${kubeConfig}
                 kubectl label namespace ${params.NS_NAME} istio-injection=enabled --kubeconfig ${kubeConfig}
 
-                kubectl apply -f ../mongo -n ${params.NS_NAME} --kubeconfig ${kubeConfig}
+                kubectl apply -f ${JENKINS_HOME}/workspace/infra/mongo -n ${params.NS_NAME} --kubeconfig ${kubeConfig}
 
                 kubectl apply -f  ${JENKINS_HOME}/workspace/src/BiMonetaryApi/App_Build/k8s/ -n ${params.NS_NAME} --kubeconfig ${kubeConfig}
             """
