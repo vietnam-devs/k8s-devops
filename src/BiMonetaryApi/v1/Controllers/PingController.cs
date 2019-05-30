@@ -23,7 +23,7 @@ namespace NetCoreKit.Samples.BiMonetaryApi.v1.Controllers
             return Ok();
         }
 
-        [HttpGet]
+        [HttpGet("pong")]
         public async Task<IActionResult> Pong()
         {
             //var response = await _exchangeServiceClient.PingAsync(new Empty());
