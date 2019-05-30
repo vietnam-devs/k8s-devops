@@ -7,14 +7,15 @@ node {
     try {
         stage('Detect changes') {
             shouldBuildAPI = sh (
-                script: """
-                    echo '1111'
+                script: """                    
                     git log -m -1 --name-only --pretty=format:'' ${scmVars.GIT_COMMIT} -- src/BiMonetaryApi
                 """,
                 returnStdout: true
             ).trim()
 
-            echo "should build ${shouldBuildAPI}"
+            if (${shouldBuildAPI} != "") {
+                echo "should build"
+            }            
         }
 
         docker.image('microsoft/dotnet:2.2.100-sdk-alpine').inside {
