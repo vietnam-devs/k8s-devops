@@ -17,7 +17,7 @@ namespace NetCoreKit.Samples.Tests
         {
             var ticker = new Ticker();
             var @events = ticker.GetUncommittedEvents();
-            Assert.True(@events.Count > 1);
+            Assert.True(@events.Count >= 1);
         }
     }
 }
