@@ -6,7 +6,7 @@ node {
 
     try {
         stage('Detect changes') {
-            def command = $/"git log -m -1 ${scmVars.GIT_COMMIT} | grep src/BiMonetaryApi"/$
+            def command = $/"git log -m -1 ${scmVars.GIT_COMMIT}"/$
             
             // res = sh(returnStdout: true, script: command).trim()
 
