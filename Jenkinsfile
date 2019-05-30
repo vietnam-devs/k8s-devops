@@ -6,10 +6,14 @@ node {
 
     try {
         stage('Detect changes') {
-            shouldBuildAPI = sh (
-                script: "git log -m -1 --name-only ${scmVars.GIT_COMMIT} | grep src/BiMonetaryApi",
-                returnStdout: true
-            ).trim()
+            def command = $/"git log -m -1 ${scmVars.GIT_COMMIT} | grep src/BiMonetaryApi"/$
+            
+            // res = sh(returnStdout: true, script: command).trim()
+
+            // shouldBuildAPI = sh (
+            //     script: "git log -m -1 --name-only ${scmVars.GIT_COMMIT} | grep src/BiMonetaryApi",
+            //     returnStdout: true
+            // ).trim()
             // shouldBuildAPI = sh (
             //     script: """                    
             //         git log -m -1 --name-only ${scmVars.GIT_COMMIT} | grep src/BiMonetaryApi
@@ -17,11 +21,13 @@ node {
             //     returnStdout: true
             // ).trim()
 
-            echo "aaa ${shouldBuildAPI}  ssss"
+            res = sh(returnStdout: true, script: command).trim()
 
-            if (shouldBuildAPI != "") {
-                echo "should build"
-            }            
+            echo "aaa ${res}  ssss"
+
+            // if (shouldBuildAPI != "") {
+            //     echo "should build"
+            // }            
         }
 
         docker.image('microsoft/dotnet:2.2.100-sdk-alpine').inside {
