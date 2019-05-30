@@ -14,14 +14,17 @@ node {
             //     script: "git log -m -1 --name-only ${scmVars.GIT_COMMIT} | grep src/BiMonetaryApi",
             //     returnStdout: true
             // ).trim()
-            // shouldBuildAPI = sh (
-            //     script: """                    
-            //         git log -m -1 --name-only ${scmVars.GIT_COMMIT} | grep src/BiMonetaryApi
-            //     """,
-            //     returnStdout: true
-            // ).trim()
+            shouldBuildAPI = sh (
+                script: """                    
+                    git log -m -1 --name-only ${scmVars.GIT_COMMIT}
+                """,
+                returnStdout: true
+            ).trim()
 
-            res = sh(returnStdout: true, script: command).trim()
+            res = sh (
+                returnStdout: true, 
+                script: command
+            ).trim()
 
             echo "aaa ${res}  ssss"
 
