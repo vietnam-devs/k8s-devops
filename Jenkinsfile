@@ -8,7 +8,7 @@ node {
         stage('Detect changes') {
             shouldBuildAPI = sh (
                 script: """                    
-                    git log -m -1 --name-only --pretty=format:'' ${scmVars.GIT_COMMIT} | grep src/BiMonetaryApi
+                    git log -m -1 --name-only --pretty=format:"" ${scmVars.GIT_COMMIT} | grep src/BiMonetaryApi
                 """,
                 returnStdout: true
             ).trim()
