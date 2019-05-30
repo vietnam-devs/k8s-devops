@@ -13,7 +13,7 @@ node {
                 returnStdout: true
             ).trim()
 
-            if (${shouldBuildAPI} != "") {
+            if (shouldBuildAPI != "") {
                 echo "should build"
             }            
         }
