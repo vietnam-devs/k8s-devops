@@ -14,8 +14,13 @@ node {
                 returnStdout: true
             ).trim()
 
-            sh label: '', script: """  git log -m -1 --name-only ${scmVars.GIT_COMMIT} | grep src/ddd
-            """
+            def command = '''
+                ls | grep foo
+                ls | grep bar
+            '''
+            def proc = ['bash', '-c', command].execute()
+            proc.waitForOrKill(5000)
+            def output = proc.in.text
            
 
             echo "aaa ${shouldBuildAPI}  ssss"
