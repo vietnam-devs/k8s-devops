@@ -1,23 +1,70 @@
-def label = "worker-${UUID.randomUUID().toString()}"
+node {
 
-podTemplate(label: label, serviceAccount: 'jenkins', containers: [
-  containerTemplate(name: 'netcore22', image: 'microsoft/dotnet:2.2.100-sdk-alpine', ttyEnabled: true),
-  containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),  
-  containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:latest', command: 'cat', ttyEnabled: true, privileged: false)  
-],
-volumes: [
-  hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
-  hostPathVolume(mountPath: '/home/jenkins/.nuget/packages', hostPath: '/home/.nuget/packages/')
-]){
-    node(label) {
-        parameters {
-            string(name: 'DEPLOY_TO_ENV', defaultValue: 'false', description: 'Do you want to deploy?')
-            string(name: 'ENV', defaultValue: 'false', description: 'Which environment?')                    
+    parameters {
+        string(name: 'WILL_BUILD_IMAGE', defaultValue: 'false', description: 'Do you want to build docker image?')
+        string(name: 'WILL_DEPLOY', defaultValue: 'false')
+        string(name: 'ENV', defaultValue: 'dev', description: 'Which environment?')
+    }
+
+    def scmVars = checkout scm
+    def gitShortCommit = scmVars.GIT_COMMIT[0..6]
+
+    try {
+        docker.image('microsoft/dotnet:2.2.100-sdk-alpine').inside {
+            stage('Build') {
+                sh '''
+                    echo ${gitShortCommit}
+                    dotnet restore
+                    dotnet build k8s-devops.sln --no-restore -nowarn:msb3202,nu1503
+                '''
+            }
+
+            stage('Run unittest') {
+                sh """
+                     dotnet test src/BiMonetary.Tests/NetCoreKit.Samples.Tests.csproj
+                """
+            }
         }
 
-        def myRepo = checkout scm
-        def gitCommit = myRepo.GIT_COMMIT
-        def gitBranch = myRepo.GIT_BRANCH
-        def shortGitCommit = "v-${gitCommit[0..6]}"
-    }    
+        if ( params.WILL_BUILD_IMAGE == 'true' ) {
+            stage('Build Docker Image') {
+                docker.image('docker:18.09').inside {
+                    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'nexus_docker_registry_login', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+
+                        sh """
+                            docker login -u $USERNAME -p $PASSWORD $REGISTRY_URL
+
+                            docker build -f src/BiMonetaryApi/Dockerfile -t $REGISTRY_URL/bimonetary-api:latest -t $REGISTRY_URL/bimonetary-api:${gitShortCommit} .
+                            docker push $REGISTRY_URL/bimonetary-api:latest
+                            docker push $REGISTRY_URL/bimonetary-api:${gitShortCommit}
+
+                            docker build -f src/ExchangeService/Dockerfile -t $REGISTRY_URL/exchange-service:latest -t $REGISTRY_URL/exchange-service:${gitShortCommit} .
+                            docker push $REGISTRY_URL/exchange-service:latest
+                            docker push $REGISTRY_URL/exchange-service:${gitShortCommit}
+
+                            docker logout
+                        """
+                        
+                    }
+                }                                   
+            }
+        }        
+
+        if ( params.WILL_DEPLOY == 'true' ) {
+            stage('Deploy') {
+                docker.image('alpine/kubectl:1.12.8').inside("-v /home/jacky/.kube:/config/.kube") {
+                    sh """                        
+                        kubectl version --kubeconfig /config/.kube/config
+
+                        kubectl set image deployments bimonetary-api-v1 *=52.175.72.125:18082/repository/docker-host/bimonetary-api:${gitShortCommit} -n ${params.ENV} --kubeconfig /config/.kube/config
+                        kubectl set image deployments exchange *=52.175.72.125:18082/repository/docker-host/exchange-service:${gitShortCommit} -n ${params.ENV} --kubeconfig /config/.kube/config
+
+                        """
+                }                                   
+            }
+        }        
+    }
+    catch(e) {
+        throw e
+    }
 }
