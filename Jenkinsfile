@@ -8,7 +8,10 @@ node {
         stage('Detect changes') {
           
             shouldBuildAPI = sh (
-                script: 'check-repo-status.sh',
+                script: """
+                    ls
+                    ./check-repo-status.sh
+                """,
                 returnStdout: true
             ).trim()           
 
