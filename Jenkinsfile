@@ -6,14 +6,7 @@ node {
 
     try {
         stage('Detect changes') {
-            def command = $/"echo ${scmVars.GIT_COMMIT} | jq .[0] | tr -d '\"'"/$
-            
-            // res = sh(returnStdout: true, script: command).trim()
-
-            // shouldBuildAPI = sh (
-            //     script: "git log -m -1 --name-only ${scmVars.GIT_COMMIT} | grep src/BiMonetaryApi",
-            //     returnStdout: true
-            // ).trim()
+          
             shouldBuildAPI = sh (
                 script: """                    
                     git log -m -1 --name-only ${scmVars.GIT_COMMIT}
@@ -21,12 +14,11 @@ node {
                 returnStdout: true
             ).trim()
 
-            res = sh (
-                returnStdout: true, 
-                script: command
-            ).trim()
+            sh label: '', script: """  git log -m -1 --name-only ${scmVars.GIT_COMMIT} | grep src/ddd
+            """
+           
 
-            echo "aaa ${res}  ssss"
+            echo "aaa ${shouldBuildAPI}  ssss"
 
             // if (shouldBuildAPI != "") {
             //     echo "should build"
