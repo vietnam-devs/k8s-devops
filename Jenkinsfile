@@ -9,7 +9,8 @@ node {
           
             shouldBuildAPI = sh (
                 script: """
-                    ls
+                    chmod +x ./check-repo-status.sh
+
                     ./check-repo-status.sh
                 """,
                 returnStdout: true
