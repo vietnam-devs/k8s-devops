@@ -22,5 +22,12 @@ namespace NetCoreKit.Samples.BiMonetaryApi.v1.Controllers
             //var response = await _exchangeServiceClient.PingAsync(new Empty());
             return Ok();
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Pong()
+        {
+            //var response = await _exchangeServiceClient.PingAsync(new Empty());
+            return Ok();
+        }
     }
 }
