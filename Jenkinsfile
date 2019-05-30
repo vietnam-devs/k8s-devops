@@ -7,11 +7,15 @@ node {
     try {
         stage('Detect changes') {
             shouldBuildAPI = sh (
-                script: """                    
-                    git log -m -1 --name-only ${scmVars.GIT_COMMIT} | grep src/BiMonetaryApi
-                """,
+                script: "git log -m -1 --name-only ${scmVars.GIT_COMMIT} | grep src/BiMonetaryApi",
                 returnStdout: true
             ).trim()
+            // shouldBuildAPI = sh (
+            //     script: """                    
+            //         git log -m -1 --name-only ${scmVars.GIT_COMMIT} | grep src/BiMonetaryApi
+            //     """,
+            //     returnStdout: true
+            // ).trim()
 
             echo "aaa ${shouldBuildAPI}  ssss"
 
