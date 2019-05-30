@@ -8,7 +8,7 @@ node {
         docker.image('microsoft/dotnet:2.2.100-sdk-alpine').inside {
             stage('Build') {
                 sh """
-                    echo 'Hello Jenkins 2019'                    
+                    echo 'Hello Jenkins'                    
                 """
             }            
         }         
