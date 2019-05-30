@@ -6,7 +6,8 @@ node {
     try {
         stage('Detect changes') {
             sh """
-                git log -m -1 --name-only --pretty=format:'' scmVars.GIT_COMMIT
+                git log -m -1
+                git log -m -1 --name-only --pretty=format:'' ${scmVars.GIT_COMMIT}
             """            
         }
 
