@@ -13,6 +13,8 @@ node {
                 returnStdout: true
             ).trim()
 
+            echo "aaa ${shouldBuildAPI}  ssss"
+
             if (shouldBuildAPI != "") {
                 echo "should build"
             }            
