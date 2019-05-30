@@ -6,7 +6,7 @@ node {
 
     try {
         stage('Detect changes') {
-            def command = $/"git log -m -1 ${scmVars.GIT_COMMIT} | tr -d '\"'"/$
+            def command = $/"echo ${scmVars.GIT_COMMIT} | jq .[0] | tr -d '\"'"/$
             
             // res = sh(returnStdout: true, script: command).trim()
 
