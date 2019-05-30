@@ -11,7 +11,13 @@ node {
                     dotnet restore
                     dotnet build k8s-devops.sln --no-restore -nowarn:msb3202,nu1503                 
                 """
-            }            
+            }     
+
+            stage('Run unittest') {
+                sh """
+                     dotnet test src/BiMonetary.Tests/NetCoreKit.Samples.Tests.csproj
+                """
+            }       
         }         
     }
     catch(e) {
