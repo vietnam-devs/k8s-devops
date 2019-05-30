@@ -8,7 +8,8 @@ node {
         docker.image('microsoft/dotnet:2.2.100-sdk-alpine').inside {
             stage('Build') {
                 sh """
-                    echo 'Hello Jenkins'                    
+                    dotnet restore
+                    dotnet build k8s-devops.sln --no-restore -nowarn:msb3202,nu1503                 
                 """
             }            
         }         
