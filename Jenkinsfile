@@ -11,20 +11,20 @@ node {
 
     try {
         
-        docker.image('microsoft/dotnet:2.2.100-sdk-alpine').inside {
-            stage('Build') {
-                sh """
-                    dotnet restore
-                    dotnet build k8s-devops.sln --no-restore -nowarn:msb3202,nu1503                 
-                """
-            }     
+        // docker.image('microsoft/dotnet:2.2.100-sdk-alpine').inside {
+        //     stage('Build') {
+        //         sh """
+        //             dotnet restore
+        //             dotnet build k8s-devops.sln --no-restore -nowarn:msb3202,nu1503                 
+        //         """
+        //     }     
 
-            stage('Run unittest') {
-                sh """
-                     dotnet test src/BiMonetary.Tests/NetCoreKit.Samples.Tests.csproj
-                """
-            }       
-        }  
+        //     stage('Run unittest') {
+        //         sh """
+        //              dotnet test src/BiMonetary.Tests/NetCoreKit.Samples.Tests.csproj
+        //         """
+        //     }       
+        // }  
 
         if ( params.WILL_BUILD_IMAGE == 'true' ) {
             stage('Build Docker Image') {
@@ -45,7 +45,19 @@ node {
                     }
                 }                                   
             }
-        }      
+        }    
+
+        if ( params.WILL_DEPLOY == 'true' ) {
+            stage('Deploy') {
+                docker.image('alpine/kubectl:1.12.8').inside("-v /home/jacky/.kube:/config/.kube") {
+                    sh """                        
+                        kubectl version --kubeconfig /config/.kube/config
+                        kubectl set image deployments bimonetary-api-v1 *=52.175.72.125:18082/repository/docker-host/bimonetary-api:${gitShortCommit} -n ${params.ENV} --kubeconfig /config/.kube/config
+                        kubectl set image deployments exchange *=52.175.72.125:18082/repository/docker-host/exchange-service:${gitShortCommit} -n ${params.ENV} --kubeconfig /config/.kube/config
+                        """
+                }                                   
+            }
+        }  
     }
     catch(e) {
         throw e
