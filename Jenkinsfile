@@ -5,7 +5,9 @@ node {
 
     try {
         stage('Detect changes') {
-            git log -m -1 --name-only --pretty=format:'' scmVars.GIT_COMMIT
+            sh """
+                git log -m -1 --name-only --pretty=format:'' scmVars.GIT_COMMIT
+            """            
         }
 
         docker.image('microsoft/dotnet:2.2.100-sdk-alpine').inside {
