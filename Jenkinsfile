@@ -11,7 +11,7 @@ node {
                 script: """
                     chmod +x ./check-repo-status.sh
 
-                    ./check-repo-status.sh
+                    ./check-repo-status.sh ${scmVars.GIT_COMMIT}
                 """,
                 returnStdout: true
             ).trim()           
